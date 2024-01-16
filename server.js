@@ -1,105 +1,63 @@
 const express = require("express");
 const app = express();
-const MongoClient = require("mongodb").MongoClient;
-const PORT = 2121;
-require("dotenv").config();
+const mongoose = require("mongoose");
+const passport = require("passport");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const methodOverride = require("method-override");
+const flash = require("express-flash");
+const logger = require("morgan");
+const connectDB = require("./config/database");
+const mainRoutes = require("./routes/main");
+const postRoutes = require("./routes/posts");
 
-let db,
-  dbConnectionStr = process.env.DB_STRING,
-  dbName = "todo";
+//Use .env file in config folder
+require("dotenv").config({ path: "./config/.env" });
 
-MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true }).then(
-  (client) => {
-    console.log(`Connected to ${dbName} Database`);
-    db = client.db(dbName);
-  }
-);
+// Passport config
+require("./config/passport")(passport);
 
+//Connect To Database
+connectDB();
+
+//Using EJS for views
 app.set("view engine", "ejs");
+
+//Static Folder
 app.use(express.static("public"));
+
+//Body Parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", async (request, response) => {
-  const todoItems = await db.collection("todos").find().toArray();
-  const itemsLeft = await db
-    .collection("todos")
-    .countDocuments({ completed: false });
-  response.render("index.ejs", { items: todoItems, left: itemsLeft });
-  // db.collection('todos').find().toArray()
-  // .then(data => {
-  //     db.collection('todos').countDocuments({completed: false})
-  //     .then(itemsLeft => {
-  //         response.render('index.ejs', { items: data, left: itemsLeft })
-  //     })
-  // })
-  // .catch(error => console.error(error))
-});
+//Logging
+app.use(logger("dev"));
 
-app.post("/addTodo", (request, response) => {
-  db.collection("todos")
-    .insertOne({ thing: request.body.todoItem, completed: false })
-    .then((result) => {
-      console.log("Todo Added");
-      response.redirect("/");
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-});
+//Use forms for put / delete
+app.use(methodOverride("_method"));
 
-app.put("/markComplete", (request, response) => {
-  db.collection("todos")
-    .updateOne(
-      { thing: request.body.itemFromJS },
-      {
-        $set: {
-          completed: true,
-        },
-      },
-      {
-        sort: { _id: -1 },
-        upsert: false,
-      }
-    )
-    .then((result) => {
-      console.log("Mark Complete");
-      response.json("Mark Complete");
-    })
-    .catch((error) => console.error(error));
-});
+// Setup Sessions - stored in MongoDB
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
 
-app.put("/markUnComplete", (request, response) => {
-  db.collection("todos")
-    .updateOne(
-      { thing: request.body.itemFromJS },
-      {
-        $set: {
-          completed: false,
-        },
-      },
-      {
-        sort: { _id: -1 },
-        upsert: false,
-      }
-    )
-    .then((result) => {
-      console.log("Mark Complete");
-      response.json("Mark Complete");
-    })
-    .catch((error) => console.error(error));
-});
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.delete("/deleteItem", (request, response) => {
-  db.collection("todos")
-    .deleteOne({ thing: request.body.itemFromJS })
-    .then((result) => {
-      console.log("Todo Deleted");
-      response.json("Todo Deleted");
-    })
-    .catch((error) => console.error(error));
-});
+//Use flash messages for errors, info, ect...
+app.use(flash());
 
-app.listen(process.env.PORT || PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+//Setup Routes For Which The Server Is Listening
+app.use("/", mainRoutes);
+app.use("/post", postRoutes);
+
+//Server Running
+app.listen(process.env.PORT, () => {
+  console.log("Server is running, you better catch it!");
 });
