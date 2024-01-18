@@ -4,11 +4,8 @@ const User = require("../models/User");
 
 module.exports = function (passport) {
   passport.use(
-    new LocalStrategy(
-      {
-        usernameField: "email",
-      },
-      (email, password, done) => {
+    new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
+      User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
           return done(err);
         }
@@ -27,10 +24,10 @@ module.exports = function (passport) {
           if (isMatch) {
             return done(null, user);
           }
-          return done(null, false, { msg: "Invalid email or password" });
+          return done(null, false, { msg: "Invalid email or password." });
         });
-      }
-    )
+      });
+    })
   );
 
   passport.serializeUser((user, done) => {
