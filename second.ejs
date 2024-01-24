@@ -1,34 +1,30 @@
-<form class="col-1" action="/post/likePost/<%= post.id %>?_method=PUT" method="POST">
-    <div class="stat">
-        <div class="stat-figure text-primary">
-        </div>
-        <div class="stat-value text-primary">
-            <h3 class="col-3">Likes: <%= post.likes %>
-                    <button type="submit">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            class="inline-block w-8 h-8 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                            </path>
-                        </svg>
-                    </button>
-            </h3>
-        </div>
+<div>
+    <div>
+        <p>
+            <%= post.caption %>
+        </p>
     </div>
-</form>
-
-<%if(post.user==user.id){ %>
-    <div class="stat">
-        <form action="/post/deletePost/<%= post.id %>?_method=DELETE" method="POST">
-            <h3 class="stat-value text-primary">Delete:
-                <button class="btn btn-primary btn-square btn-outline" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </h3>
+    <div>
+        <h2>Add a comment</h2>
+        <form action="/comment/createComment/<%=post._id%>" method="POST">
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <input type="text" class="form-control" id="comment" name="comment">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-    <%}%>
+    <div>
+        <ul>
+            <% for(var i=0; i<comments.length; i++) {%>
+                <li class="col-6 justify-content-between mt-5">
+                    <%= comments[i].comment%>
+                </li>
+                <% } %>
+        </ul>
+        <div class="col-6 mt-5">
+            <a class="btn btn-primary" href="/profile">Return to Profile</a>
+            <a class="btn btn-primary" href="/feed">Return to Feed</a>
+        </div>
+    </div>
+</div>

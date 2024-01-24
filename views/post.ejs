@@ -7,9 +7,6 @@
             <%= post.title %>
           </h1>
         </div>
-        <div class="hero-content flex-col lg:flex-row">
-          <img class=" rounded-lg shadow-2x1" src="<%= post.image%>" />
-        </div>
         <form action="/post/likePost/<%= post.id %>?_method=PUT" method="POST" class=" stats shadow">
           <div class="stat">
             <div class="stat-figure text-primary">
@@ -35,9 +32,22 @@
                     </svg>
                   </button>
                 </h3>
-              </form>
             </div>
             <%}%>
+        </form>
+        <div class="hero-content flex-col lg:flex-row">
+          <img class=" rounded-lg shadow-2x1" src="<%= post.image%>" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="hero-content flex-col lg:flex-row-reverse text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Hello there</h1>
+        <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+          quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+        <button class="btn btn-primary">Get Started</button>
       </div>
     </div>
   </div>
@@ -47,34 +57,6 @@
 
 
 
-  </div>
-  <div class="">
-    <p>
-      <%= post.caption %>
-    </p>
-  </div>
-  <div>
-    <h2>Add a comment</h2>
-    <form action="/comment/createComment/<%=post._id%>" method="POST">
-      <div class="mb-3">
-        <label for="comment" class="form-label">Comment</label>
-        <input type="text" class="form-control" id="comment" name="comment">
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
-  <ul>
-    <% for(var i=0; i<comments.length; i++) {%>
-      <li class="col-6 justify-content-between mt-5">
-        <%= comments[i].comment%>
-      </li>
-      <% } %>
-  </ul>
-  <div class="col-6 mt-5">
-    <a class="btn btn-primary" href="/profile">Return to Profile</a>
-    <a class="btn btn-primary" href="/feed">Return to Feed</a>
-  </div>
-  </div>
-  </div>
+
 
   <%- include('partials/footer') -%>
