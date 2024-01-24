@@ -1,19 +1,24 @@
 <%- include('partials/loggedIn-header') -%>
-    <div class="collapse collapse-plus bg-base-200">
-        <input type="radio" name="my-accordion-3" checked="checked" />
-        <div class="collapse-title text-xl font-medium">
-            Click to open this one and close others
-        </div>
-        <div class="collapse-content">
-            <ul class="row list-unstyled">
-                <% for(var i=0; i<posts.length; i++) {%>
-                    <li class="col-6 justify-content-between mt-5">
+
+    <% for(var i=0; i<posts.length; i++) { %>
+        <div class="collapse collapse-open bg-base-200">
+            <input type="radio" name="my-accordion-<%= i %>" <%=i===0 ? ' checked="checked"' : '' %> />
+            <div class="collapse-title text-xl font-medium">
+                <h2>
+                    <%= posts[i].title %>
+                </h2>
+            </div>
+            <div class="collapse-content">
+                <ul>
+                    <li>
                         <a href="/post/<%= posts[i]._id%>">
                             <img class="img-fluid" src="<%= posts[i].image%>">
+
                         </a>
                     </li>
-                    <% } %>
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
-    <%- include('partials/footer') -%>
+        <% } %>
+
+            <%- include('partials/footer') -%>
