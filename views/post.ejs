@@ -7,50 +7,80 @@
             <%= post.title %>
           </h1>
         </div>
-        <form action="/post/likePost/<%= post.id %>?_method=PUT" method="POST" class=" stats shadow">
-          <div class="stat">
-            <div class="stat-figure text-primary">
-              <h3 class="stat-value text-primary">Likes: <%= post.likes %>
-                  <button type="submit" class="btn btn-primary btn-square btn-outline">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                      class="inline-block w-8 h-8 stroke-current">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                      </path>
-                    </svg>
-                  </button>
-            </div>
-          </div>
-          <%if(post.user==user.id){ %>
-            <div class="stat">
-              <form action="/post/deletePost/<%= post.id %>?_method=DELETE" method="POST">
-                <h3 class="stat-value text-primary">Delete:
-                  <button class="btn btn-primary btn-square btn-outline" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </h3>
-            </div>
-            <%}%>
-        </form>
         <div class="hero-content flex-col lg:flex-row">
           <img class=" rounded-lg shadow-2x1" src="<%= post.image%>" />
         </div>
+        <p class="text-center">
+          <%= post.caption %>
+        </p>
+        <div>
+          <form action="/post/likePost/<%= post.id %>?_method=PUT" method="POST" class=" stats shadow">
+            <div class="stat">
+              <div class="stat-figure text-primary">
+                <h3 class="stat-value text-primary">Likes: <%= post.likes %>
+                    <button type="submit" class="btn btn-primary btn-square btn-outline">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                        </path>
+                      </svg>
+                    </button>
+              </div>
+            </div>
+
+            <%if(post.user==user.id){ %>
+              <div class="stat">
+                <form action="/post/deletePost/<%= post.id %>?_method=DELETE" method="POST">
+                  <h3 class="stat-value text-primary">Delete:
+                    <button class="btn btn-primary btn-square btn-outline" type="submit">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </h3>
+
+              </div>
+              <%}%>
+          </form>
+
+          <div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="">
-    <div class="hero-content flex-col lg:flex-row-reverse text-center">
-      <div class="max-w-md">
-        <h1 class="text-5xl font-bold">Hello there</h1>
-        <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-          quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-        <button class="btn btn-primary">Get Started</button>
-      </div>
-    </div>
-  </div>
+      <div>
+
+        <div class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text"></span>
+            <form action="/comment/createComment/<%=post._id%>" method="POST">
+              <div>
+                <label for="comment" class="label-text text-center">Comment</label>
+                <input type="text" class="input input-bordered w-full max-w-xs" id="comment" name="comment">
+              </div>
+              <button type="submit" class="btn btn-alt">Submit</button>
+          </div>
+          </form>
+        </div>
+        <div class="chat chat-start">
+          <div class="chat chat-start">
+            <div class="w-10 rounded-full">
+              <img alt="Tailwind CSS chat bubble component"
+                src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            </div>
+          </div>
+          <div class="chat-bubble">
+            <ul>
+              <% for(var i=0; i<comments.length; i++) {%>
+                <li class="col-6 justify-content-between mt-5">
+                  <%= comments[i].comment%>
+                </li>
+                <% } %>
+            </ul>
+          </div>
+        </div>
 
 
 
@@ -59,4 +89,4 @@
 
 
 
-  <%- include('partials/footer') -%>
+        <%- include('partials/footer') -%>
