@@ -14,6 +14,9 @@ const connectDB = async () => {
     console.error(err);
     process.exit(1);
   }
+  app.listen(process.env.PORT, () => {
+    console.log("Server is running, you better catch it!");
+  });
 };
 
 module.exports = connectDB;
